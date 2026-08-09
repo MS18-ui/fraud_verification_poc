@@ -1,0 +1,55 @@
+domain: identity
+description: >
+  Is the person who they claim to be? Evaluated in strict order per record:
+  FAIL rules first (any hard-stop condition wins outright), then VERIFIED
+  (all conditions must hold), then REVIEW. If nothing matches, default_outcome applies.
+evaluation_order: [fail, verified, review]
+default_outcome: review
+default_rule_id: IDENTITY_NO_RULE_MATCHED
+
+rules:
+  fail:
+    - id: IDENTITY_FAIL_NO_RECORD
+      description: No record found on file.
+      condition: { field: identity.record_found, op: eq, value: false }
+
+    - id: IDENTITY_FAIL_OFAC
+      description: OFAC watchlist hit.
+      condition: { field: identity.ofac_hit, op: eq, value: true }
+
+    - id: IDENTITY_FAIL_SSN_STATUS
+      description: SSN status is disqualifying.
+      condition: { field: identity.ssn_status, op: in, value: [invalid, deceased, not_issued] }
+
+    - id: IDENTITY_FAIL_NO_NAME_MATCH
+      description: Name is not corroborated by any vendor path.
+      condition: { field: identity.name_match_any, op: eq, value: false }
+
+    - id: IDENTITY_FAIL_LOW_SCORE
+      description: Ekata identity_check_score below hard floor.
+      condition: { field: identity.identity_check_score, op: lt, value: 200 }
+
+  verified:
+    - id: IDENTITY_VERIFIED
+      description: Strong, corroborated identity with low network risk.
+      condition:
+        all:
+          - { field: identity.record_found, op: eq, value: true }
+          - { field: identity.ofac_hit, op: eq, value: false }
+          - { field: identity.ssn_status, op: eq, value: clear }
+          - { field: identity.name_match_any, op: eq, value: true }
+          - { field: identity.identity_check_score, op: gte, value: 400 }
+          - { field: identity.identity_network_score, op: lt, value: 0.30 }
+          - { field: identity.low_identity_score, op: eq, value: false }
+
+  review:
+    - id: IDENTITY_REVIEW
+      description: Record exists and name is corroborated, but a risk signal is present.
+      condition:
+        all:
+          - { field: identity.record_found, op: eq, value: true }
+          - { field: identity.ofac_hit, op: eq, value: false }
+          - { field: identity.name_match_any, op: eq, value: true }
+          - any:
+              - { field: identity.alerts_count, op: gt, value: 0 }
+              - { field: identity.identity_check_score, op: between, value: [200, 399] }

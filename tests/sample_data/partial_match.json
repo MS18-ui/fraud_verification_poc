@@ -1,0 +1,879 @@
+{
+  "sample": "partial_match",
+  "unique_id": "PNC-SAMPLE-PARTIAL",
+  "note": "The name matches on both surfaces, but the submitted address is only a *previous* address on the GIACT file (CI23 + alert 130) and fails Ekata's address check.",
+  "match_tiers": {
+    "giact": "partial_match",
+    "ekata": "partial_match"
+  },
+  "entity": {
+    "entity_id": "E-PARTIAL_MATCH",
+    "entity_type": "person",
+    "market_city": "CLEVELAND",
+    "market_state": "OH",
+    "address_line1": "7579 LIBERTY ST",
+    "city": "Cleveland",
+    "state": "OH",
+    "zip_code": "44177",
+    "country": "US",
+    "phone_number": "4408138163",
+    "first_name": "Eric",
+    "last_name": "Pennington",
+    "date_of_birth": "2002-11-06",
+    "email": "eric_pennington@aol.com",
+    "tax_id": "687319489",
+    "dl_number": "59259639",
+    "dl_state": "OH",
+    "is_fraud": 1,
+    "typology": "identity_theft",
+    "profile": "identity_theft"
+  },
+  "account": {
+    "account_id": "E-PARTIAL_MATCH-A0",
+    "entity_id": "E-PARTIAL_MATCH",
+    "routing_number": "042000398",
+    "account_number": "0116212",
+    "account_type": "Savings"
+  },
+  "labels": {
+    "is_fraud": 1,
+    "typology": "identity_theft",
+    "profile": "identity_theft"
+  },
+  "vendors": {
+    "giact": {
+      "endpoint": "POST /api/v5/inquiries",
+      "request": {
+        "Inquiry": {
+          "UniqueId": "PNC-SAMPLE-PARTIAL",
+          "GVerifyEnabled": true,
+          "GIdentifyEnabled": true,
+          "Check": {
+            "RoutingNumber": "042000398",
+            "AccountNumber": "0116212",
+            "AccountType": "Savings"
+          },
+          "Customer": {
+            "FirstName": "Eric",
+            "LastName": "Pennington",
+            "AddressLine1": "7579 LIBERTY ST",
+            "City": "Cleveland",
+            "State": "OH",
+            "ZipCode": "44177",
+            "Country": "US",
+            "DateOfBirth": "2002-11-06",
+            "TaxId": "687319489"
+          }
+        }
+      },
+      "response": {
+        "PostInquiryResult": {
+          "ItemReferenceId": 5559348485,
+          "CreatedDate": "2026-07-21T09:30:00",
+          "VerificationResponse": "AcceptWithRisk",
+          "AccountResponseCode": "RT03",
+          "BankName": "WESBANCO BANK INC",
+          "AccountAddedDate": "2018-05-04T00:00:00",
+          "AccountLastUpdatedDate": "2026-07-20T00:00:00",
+          "AccountClosedDate": null,
+          "FundsConfirmationResult": null,
+          "CustomerResponseCode": "CI23",
+          "MatchedPersonData": [
+            {
+              "FirstName": "ERIC",
+              "MiddleName": "",
+              "LastName": "PENNINGTON",
+              "DateOfBirth": "2002-11-06T00:00:00",
+              "SsnIssueState": "OH",
+              "SsnIssueStartYear": "2002",
+              "SsnIssueEndYear": "2004",
+              "SsnStatus": "clear",
+              "AddressRecords": [
+                {
+                  "AddressLine1": "5020 CEDAR PL",
+                  "AddressLine2": "APT 664",
+                  "City": "CLEVELAND",
+                  "State": "OH",
+                  "ZipCode": "44116",
+                  "Status": "Current",
+                  "DateReported": "2024-05-28T00:00:00",
+                  "ParsedAddressLine1": {
+                    "StreetNumber": "5020",
+                    "PreDirectional": "",
+                    "StreetName": "CEDAR",
+                    "StreetSuffix": "PL",
+                    "PostDirectional": "",
+                    "UnitType": "APT",
+                    "UnitIdentifier": "664"
+                  }
+                },
+                {
+                  "AddressLine1": "7579 LIBERTY ST",
+                  "AddressLine2": "",
+                  "City": "CLEVELAND",
+                  "State": "OH",
+                  "ZipCode": "44177",
+                  "Status": "Previous",
+                  "DateReported": "2026-05-11T00:00:00",
+                  "ParsedAddressLine1": {
+                    "StreetNumber": "7579",
+                    "PreDirectional": "",
+                    "StreetName": "LIBERTY",
+                    "StreetSuffix": "ST",
+                    "PostDirectional": "",
+                    "UnitType": "",
+                    "UnitIdentifier": ""
+                  }
+                },
+                {
+                  "AddressLine1": "9630 CENTRAL DR",
+                  "AddressLine2": "",
+                  "City": "CLEVELAND",
+                  "State": "OH",
+                  "ZipCode": "44183",
+                  "Status": "Previous",
+                  "DateReported": "2026-06-11T00:00:00",
+                  "ParsedAddressLine1": {
+                    "StreetNumber": "9630",
+                    "PreDirectional": "",
+                    "StreetName": "CENTRAL",
+                    "StreetSuffix": "DR",
+                    "PostDirectional": "SW",
+                    "UnitType": "",
+                    "UnitIdentifier": ""
+                  }
+                },
+                {
+                  "AddressLine1": "7752 HAMILTON RD",
+                  "AddressLine2": "",
+                  "City": "ROCKVILLE",
+                  "State": "MD",
+                  "ZipCode": "20837",
+                  "Status": "SecondPrevious",
+                  "DateReported": "2017-03-25T00:00:00",
+                  "ParsedAddressLine1": {
+                    "StreetNumber": "7752",
+                    "PreDirectional": "",
+                    "StreetName": "HAMILTON",
+                    "StreetSuffix": "RD",
+                    "PostDirectional": "W",
+                    "UnitType": "",
+                    "UnitIdentifier": ""
+                  }
+                }
+              ],
+              "PhoneNumbers": [
+                {
+                  "Classification": "Business",
+                  "NumberType": "Standard",
+                  "AreaCode": "440",
+                  "Exchange": "633",
+                  "Suffix": "6969",
+                  "PhoneNumber": "4406336969"
+                },
+                {
+                  "Classification": "Personal",
+                  "NumberType": "Mobile",
+                  "AreaCode": "216",
+                  "Exchange": "239",
+                  "Suffix": "8293",
+                  "PhoneNumber": "2162398293"
+                },
+                {
+                  "Classification": "Business",
+                  "NumberType": "Other",
+                  "AreaCode": "216",
+                  "Exchange": "348",
+                  "Suffix": "7353",
+                  "PhoneNumber": "2163487353"
+                },
+                {
+                  "Classification": "Personal",
+                  "NumberType": "Other",
+                  "AreaCode": "440",
+                  "Exchange": "304",
+                  "Suffix": "0140",
+                  "PhoneNumber": "4403040140"
+                }
+              ]
+            }
+          ],
+          "ConsumerAlertMessages": [
+            {
+              "Code": "130",
+              "Details": "Input address matches a previous address on the consumer record"
+            }
+          ],
+          "OfacListPotentialMatches": []
+        }
+      },
+      "flags": {
+        "match_tier": "partial_match",
+        "flag_account_verified": false,
+        "flag_identity_verified": false,
+        "flag_record_found": true,
+        "flag_name_match": true,
+        "flag_address_match": false,
+        "flag_consumer_alert": true,
+        "flag_ofac_hit": false
+      }
+    },
+    "ekata": {
+      "endpoint": "GET /3.3/identity_check",
+      "request": {
+        "primary.name": "Eric Pennington",
+        "primary.phone": "4408138163",
+        "primary.email_address": "eric_pennington@aol.com",
+        "primary.address.street_line_1": "7579 LIBERTY ST",
+        "primary.address.city": "Cleveland",
+        "primary.address.state_code": "OH",
+        "primary.address.postal_code": "44177",
+        "primary.address.country_code": "US",
+        "ip_address": "48.198.73.157"
+      },
+      "response": {
+        "request": null,
+        "primary_phone_checks": {
+          "error": null,
+          "warnings": [],
+          "is_valid": true,
+          "country_code": "US",
+          "is_commercial": false,
+          "line_type": "Landline",
+          "carrier": "T-Mobile USA",
+          "is_prepaid": true,
+          "match_to_name": "Match",
+          "match_to_address": "City match",
+          "subscriber": {
+            "name": "Eric Pennington",
+            "age_range": {
+              "from": 35,
+              "to": 39
+            }
+          }
+        },
+        "secondary_phone_checks": null,
+        "primary_address_checks": {
+          "error": null,
+          "warnings": [
+            "Invalid Input",
+            "Both parsed and postal address parameters provided, postal address parameters ignored."
+          ],
+          "is_valid": true,
+          "input_completeness": "Partial",
+          "match_to_name": "No match",
+          "resident": {
+            "name": "Eric Pennington",
+            "age_range": {
+              "from": 35,
+              "to": 39
+            }
+          },
+          "is_commercial": true,
+          "is_forwarder": false,
+          "type": "Commercial mail drop"
+        },
+        "secondary_address_checks": null,
+        "primary_email_address_checks": {
+          "error": null,
+          "warnings": [],
+          "is_valid": true,
+          "is_autogenerated": false,
+          "is_disposable": false,
+          "email_first_seen_days": 40,
+          "email_domain_creation_days": 4962,
+          "match_to_name": "Match",
+          "match_to_address": "City match",
+          "email_risk_score": 0.43,
+          "mailbox_velocity": 8,
+          "registered_owner": {
+            "name": "Eric Pennington",
+            "age_range": {
+              "from": 35,
+              "to": 39
+            }
+          }
+        },
+        "secondary_email_address_checks": null,
+        "ip_address_checks": {
+          "error": "Partial",
+          "warnings": [
+            "IP address is in private range"
+          ],
+          "is_valid": true,
+          "proxy_risk": false,
+          "geolocation": {
+            "postal_code": "15243",
+            "city_name": "Pittsburgh",
+            "subdivision": "PA",
+            "country_name": "United States",
+            "country_code": "US",
+            "continent_code": "NA"
+          },
+          "match_to_primary_name": "Match",
+          "match_to_secondary_name": null,
+          "distance_from_primary_address": 140,
+          "distance_from_secondary_address": null,
+          "distance_from_primary_phone": 140,
+          "distance_from_secondary_phone": null
+        },
+        "identity_check_score": 300,
+        "identity_network_score": 0.303,
+        "upcoming_identity_check_score": 300,
+        "alerts": [
+          {
+            "type": "high_velocity",
+            "message": "Identity elements seen at high velocity in the network"
+          },
+          {
+            "type": "impossible_travel",
+            "message": "IP geolocation inconsistent with address history"
+          }
+        ]
+      },
+      "flags": {
+        "match_tier": "partial_match",
+        "flag_phone_name_match": true,
+        "flag_address_name_match": false,
+        "flag_email_name_match": true,
+        "flag_phone_address_match": false,
+        "flag_ip_local": false,
+        "flag_ip_proxy_risk": false,
+        "flag_email_disposable": false,
+        "flag_low_identity_score": false,
+        "flag_alerts": true
+      }
+    }
+  },
+  "normalized": {
+    "schema_version": "1.0",
+    "unique_id": "PNC-SAMPLE-PARTIAL",
+    "entity_id": "E-PARTIAL_MATCH",
+    "sources": [
+      {
+        "vendor": "giact",
+        "product": "PostInquiry",
+        "endpoint": "POST /api/v5/inquiries",
+        "reference_id": 5559348485,
+        "created_at": "2026-07-21T09:30:00",
+        "services": [
+          "gidentify",
+          "gverify"
+        ],
+        "decision": "review",
+        "outcome": "AcceptWithRisk"
+      },
+      {
+        "vendor": "ekata",
+        "product": "identity_check",
+        "endpoint": "GET /3.3/identity_check",
+        "reference_id": null,
+        "created_at": null,
+        "services": [
+          "ip_address",
+          "primary_address",
+          "primary_email_address",
+          "primary_phone"
+        ],
+        "decision": null,
+        "outcome": null
+      }
+    ],
+    "subject": {
+      "type": "person",
+      "submitted": {
+        "name": "Eric Pennington",
+        "first_name": "Eric",
+        "last_name": "Pennington",
+        "business_name": null,
+        "date_of_birth": "2002-11-06",
+        "tax_id": "687319489",
+        "country": "US"
+      },
+      "on_file": [
+        {
+          "source": "giact",
+          "record_type": "person",
+          "name": "ERIC PENNINGTON",
+          "first_name": "ERIC",
+          "last_name": "PENNINGTON",
+          "date_of_birth": "2002-11-06T00:00:00",
+          "age_range": null,
+          "identifiers": {
+            "ssn_issue_state": "OH",
+            "ssn_issue_start_year": "2002",
+            "ssn_status": "clear"
+          },
+          "file_age_days": null,
+          "n_addresses": 4,
+          "n_phones": 4
+        },
+        {
+          "source": "ekata",
+          "record_type": "identity",
+          "name": "Eric Pennington",
+          "age_range": {
+            "from": 35,
+            "to": 39
+          },
+          "identifiers": {},
+          "file_age_days": null
+        }
+      ],
+      "verification": {
+        "giact": {
+          "decision": "review",
+          "outcome": "AcceptWithRisk",
+          "code": "CI23"
+        }
+      },
+      "knowledge_based_auth": null
+    },
+    "addresses": [
+      {
+        "role": "submitted",
+        "sources": [
+          "input",
+          "ekata"
+        ],
+        "line1": "7579 LIBERTY ST",
+        "line2": null,
+        "city": "Cleveland",
+        "state": "OH",
+        "postal_code": "44177",
+        "country": "US",
+        "status": null,
+        "status_raw": null,
+        "reported_days": null,
+        "attributes": {
+          "is_valid": true,
+          "type": "commercial_mail_drop",
+          "type_raw": "Commercial mail drop",
+          "is_commercial": true,
+          "is_forwarder": false,
+          "input_completeness": "partial",
+          "warnings": [
+            "Invalid Input",
+            "Both parsed and postal address parameters provided, postal address parameters ignored."
+          ],
+          "error": null
+        },
+        "match": {
+          "ekata": {
+            "to_name": "no_match",
+            "to_name_raw": "No match",
+            "resident_name": "Eric Pennington"
+          }
+        }
+      },
+      {
+        "role": "on_file",
+        "sources": [
+          "giact"
+        ],
+        "line1": "5020 CEDAR PL",
+        "line2": "APT 664",
+        "city": "CLEVELAND",
+        "state": "OH",
+        "postal_code": "44116",
+        "country": null,
+        "status": "current",
+        "status_raw": "Current",
+        "reported_days": 784,
+        "attributes": {},
+        "match": {
+          "giact": {
+            "to_submitted": "no_match"
+          }
+        }
+      },
+      {
+        "role": "on_file",
+        "sources": [
+          "giact"
+        ],
+        "line1": "7579 LIBERTY ST",
+        "line2": null,
+        "city": "CLEVELAND",
+        "state": "OH",
+        "postal_code": "44177",
+        "country": null,
+        "status": "previous",
+        "status_raw": "Previous",
+        "reported_days": 71,
+        "attributes": {},
+        "match": {
+          "giact": {
+            "to_submitted": "match"
+          }
+        }
+      },
+      {
+        "role": "on_file",
+        "sources": [
+          "giact"
+        ],
+        "line1": "9630 CENTRAL DR",
+        "line2": null,
+        "city": "CLEVELAND",
+        "state": "OH",
+        "postal_code": "44183",
+        "country": null,
+        "status": "previous",
+        "status_raw": "Previous",
+        "reported_days": 40,
+        "attributes": {},
+        "match": {
+          "giact": {
+            "to_submitted": "no_match"
+          }
+        }
+      },
+      {
+        "role": "on_file",
+        "sources": [
+          "giact"
+        ],
+        "line1": "7752 HAMILTON RD",
+        "line2": null,
+        "city": "ROCKVILLE",
+        "state": "MD",
+        "postal_code": "20837",
+        "country": null,
+        "status": "previous",
+        "status_raw": "SecondPrevious",
+        "reported_days": 3405,
+        "attributes": {},
+        "match": {
+          "giact": {
+            "to_submitted": "no_match"
+          }
+        }
+      }
+    ],
+    "contact": {
+      "phones": [
+        {
+          "role": "on_file",
+          "sources": [
+            "giact"
+          ],
+          "number": "4406336969",
+          "line_type": "landline",
+          "line_type_raw": "Standard",
+          "usage": "business",
+          "usage_raw": "Business",
+          "carrier": null,
+          "attributes": {},
+          "match": {}
+        },
+        {
+          "role": "on_file",
+          "sources": [
+            "giact"
+          ],
+          "number": "2162398293",
+          "line_type": "mobile",
+          "line_type_raw": "Mobile",
+          "usage": "personal",
+          "usage_raw": "Personal",
+          "carrier": null,
+          "attributes": {},
+          "match": {}
+        },
+        {
+          "role": "on_file",
+          "sources": [
+            "giact"
+          ],
+          "number": "2163487353",
+          "line_type": "other",
+          "line_type_raw": "Other",
+          "usage": "business",
+          "usage_raw": "Business",
+          "carrier": null,
+          "attributes": {},
+          "match": {}
+        },
+        {
+          "role": "on_file",
+          "sources": [
+            "giact"
+          ],
+          "number": "4403040140",
+          "line_type": "other",
+          "line_type_raw": "Other",
+          "usage": "personal",
+          "usage_raw": "Personal",
+          "carrier": null,
+          "attributes": {},
+          "match": {}
+        },
+        {
+          "role": "submitted",
+          "sources": [
+            "ekata"
+          ],
+          "number": "4408138163",
+          "line_type": "landline",
+          "line_type_raw": "Landline",
+          "usage": "personal",
+          "usage_raw": "Personal",
+          "carrier": "T-Mobile USA",
+          "attributes": {
+            "is_valid": true,
+            "is_prepaid": true,
+            "is_commercial": false,
+            "country_code": "US",
+            "warnings": [],
+            "error": null
+          },
+          "match": {
+            "ekata": {
+              "to_name": "match",
+              "to_name_raw": "Match",
+              "to_address": "partial",
+              "to_address_raw": "City match",
+              "subscriber_name": "Eric Pennington"
+            }
+          }
+        }
+      ],
+      "emails": [
+        {
+          "role": "submitted",
+          "sources": [
+            "ekata"
+          ],
+          "address": "eric_pennington@aol.com",
+          "domain": "aol.com",
+          "attributes": {
+            "is_valid": true,
+            "is_disposable": false,
+            "is_autogenerated": false,
+            "first_seen_days": 40,
+            "domain_age_days": 4962,
+            "risk_score": 0.43,
+            "mailbox_velocity": 8,
+            "warnings": [],
+            "error": null
+          },
+          "match": {
+            "ekata": {
+              "to_name": "match",
+              "to_name_raw": "Match",
+              "to_address": "partial",
+              "to_address_raw": "City match",
+              "owner_name": "Eric Pennington"
+            }
+          }
+        }
+      ],
+      "domains": []
+    },
+    "network": {
+      "ip_address": "48.198.73.157",
+      "sources": [
+        "ekata"
+      ],
+      "is_valid": true,
+      "proxy_detected": false,
+      "proxy": {
+        "anonymous": null,
+        "corporate": null,
+        "risk": false
+      },
+      "geo": {
+        "city": "Pittsburgh",
+        "state": "PA",
+        "postal_code": "15243",
+        "country_code": "US",
+        "latitude": null,
+        "longitude": null,
+        "continent_code": "NA"
+      },
+      "isp": null,
+      "organization": null,
+      "domain": null,
+      "user_type": null,
+      "connection_type": null,
+      "distance_to_address_miles": 140,
+      "distance_to_phone_miles": 140,
+      "geo_match": {},
+      "match": {
+        "ekata": {
+          "to_address": "no_match",
+          "distance_to_address_miles": 140,
+          "to_name": "match",
+          "to_name_raw": "Match"
+        }
+      }
+    },
+    "account": {
+      "sources": [
+        "giact"
+      ],
+      "number_last4": "6212",
+      "routing_number": "042000398",
+      "type": "savings",
+      "bank_name": "WESBANCO BANK INC",
+      "status": "open",
+      "opened_days": 3000,
+      "last_updated_days": 1,
+      "closed_days": null,
+      "funds_confirmed": null,
+      "verification": {
+        "giact": {
+          "decision": "review",
+          "outcome": "AcceptWithRisk",
+          "code": "RT03"
+        }
+      }
+    },
+    "risk": {
+      "scores": [
+        {
+          "name": "identity_check_score",
+          "source": "ekata",
+          "value": 300,
+          "scale": [
+            0,
+            500
+          ],
+          "direction": "higher_safer"
+        },
+        {
+          "name": "identity_network_score",
+          "source": "ekata",
+          "value": 0.303,
+          "scale": [
+            0,
+            1
+          ],
+          "direction": "higher_riskier"
+        },
+        {
+          "name": "upcoming_identity_check_score",
+          "source": "ekata",
+          "value": 300,
+          "scale": [
+            0,
+            500
+          ],
+          "direction": "higher_safer"
+        },
+        {
+          "name": "email_risk_score",
+          "source": "ekata",
+          "value": 0.43,
+          "scale": [
+            0,
+            1
+          ],
+          "direction": "higher_riskier"
+        }
+      ],
+      "alerts": [
+        {
+          "source": "giact",
+          "code": "130",
+          "type": null,
+          "message": "Input address matches a previous address on the consumer record",
+          "severity": "info"
+        },
+        {
+          "source": "ekata",
+          "code": null,
+          "type": "high_velocity",
+          "message": "Identity elements seen at high velocity in the network",
+          "severity": "warning"
+        },
+        {
+          "source": "ekata",
+          "code": null,
+          "type": "impossible_travel",
+          "message": "IP geolocation inconsistent with address history",
+          "severity": "warning"
+        }
+      ],
+      "watchlist": {
+        "screened": false,
+        "hit": null,
+        "matches": []
+      },
+      "indicators": {
+        "adverse_alert": true,
+        "autogenerated_email": false,
+        "commercial_address": true,
+        "disposable_email": false,
+        "email_risk_level": null,
+        "forwarder_address": false,
+        "low_identity_score": false,
+        "mailbox_velocity": 8,
+        "po_box_address": false,
+        "prepaid_phone": true,
+        "proxy_detected": false
+      }
+    },
+    "match": {
+      "elements": {
+        "name": {
+          "giact": "match",
+          "ekata": null,
+          "agreement": "single_source"
+        },
+        "address": {
+          "giact": "partial",
+          "ekata": "no_match",
+          "agreement": "agree"
+        },
+        "phone": {
+          "giact": null,
+          "ekata": "match",
+          "agreement": "single_source"
+        },
+        "email": {
+          "giact": null,
+          "ekata": "match",
+          "agreement": "single_source"
+        },
+        "ip": {
+          "giact": null,
+          "ekata": "no_match",
+          "agreement": "single_source"
+        }
+      },
+      "giact": {
+        "tier": "partial_match",
+        "flags": {
+          "flag_account_verified": false,
+          "flag_identity_verified": false,
+          "flag_record_found": true,
+          "flag_name_match": true,
+          "flag_address_match": false,
+          "flag_consumer_alert": true,
+          "flag_ofac_hit": false
+        }
+      },
+      "ekata": {
+        "tier": "partial_match",
+        "flags": {
+          "flag_phone_name_match": true,
+          "flag_address_name_match": false,
+          "flag_email_name_match": true,
+          "flag_phone_address_match": false,
+          "flag_ip_local": false,
+          "flag_ip_proxy_risk": false,
+          "flag_email_disposable": false,
+          "flag_low_identity_score": false,
+          "flag_alerts": true
+        }
+      }
+    },
+    "labels": {
+      "is_fraud": 1,
+      "typology": "identity_theft",
+      "profile": "identity_theft"
+    }
+  }
+}
