@@ -1,0 +1,12 @@
+# Vendor call priority per account holder type. This is the config referenced
+# in the design call: the LLM tool-planner is given this as guidance, and it
+# is also the deterministic fallback order used if the LLM call fails --
+# so vendor priority is never solely dependent on the LLM's judgment.
+person:
+  - ekata_identity_check
+  - giact_verify
+  - ews_check
+business:
+  - giact_verify
+  - ekata_identity_check
+  - ews_check

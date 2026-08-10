@@ -1,0 +1,38 @@
+# Deterministic per-transfer-type waterfall used by the client-demo path
+# (engine/waterfall.py). Separate from config/vendor_priority.yaml, which
+# still drives the LLM-planned agentic path in engine/orchestrator_stub.py
+# -- untouched by this file.
+#
+# Reviewable without a code change, same principle as rules/*.yaml.
+#
+# "LSEG" here is the existing giact_verify tool, relabeled for the client
+# demo -- team decision (2026-08-04): treat LSEG as GIACT for now, revisit
+# if/when a real separate LSEG integration is scoped.
+#
+# Which route a request uses is derived from the request's own fields by
+# engine/waterfall.py:classify_transfer_type() -- swift_code present (no
+# routing_number) => international; routing_number + account_number =>
+# domestic; neither => onboarding. No internal tag is read from the request.
+routes:
+  domestic:
+    order: [ews_check, giact_verify]
+    fallback: true          # falls through hop to hop on no-data/outage
+  international:
+    order: [giact_verify]
+    fallback: false          # single hop only -- no data/outage here means decline, not a fallback
+  onboarding:
+    order: [ekata_identity_check]
+    fallback: false          # single hop -- EWS/GIACT have nothing to check without an account number
+
+labels:
+  ews_check: EWS
+  giact_verify: LSEG
+  ekata_identity_check: Ekata
+
+# Informational only right now (not yet enforced by engine/waterfall.py) --
+# per-vendor call timeout, matches the shape shown in the client's mocked
+# Configuration screen (AVS_INCEDO.html).
+timeouts_ms:
+  ews_check: 500
+  giact_verify: 1000
+  ekata_identity_check: 2000

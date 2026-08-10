@@ -1,0 +1,39 @@
+description: >
+  Combines identity / owner / account outcomes (after supplementary caps/overrides
+  are applied) into one overall decision. Evaluated top-to-bottom, first match wins.
+outcome_rank: { verified: 2, review: 1, fail: 0 }
+
+rows:
+  # Fail rows are checked FIRST -- a hard fail in any domain forces decline
+  # regardless of how the other two domains came out.
+  - identity: fail
+    owner: any
+    account: any
+    overall: decline
+
+  - identity: any
+    owner: fail
+    account: any
+    overall: decline
+
+  - identity: any
+    owner: any
+    account: fail
+    overall: decline
+
+  - identity: verified
+    owner: verified
+    account: verified
+    overall: approve
+
+  - identity: verified
+    owner: review
+    account: [verified, review]
+    overall: manual_review
+
+  - identity: review
+    owner: any
+    account: any
+    overall: manual_review
+
+default_overall: manual_review

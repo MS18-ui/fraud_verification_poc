@@ -1,0 +1,48 @@
+domain: owner
+description: >
+  Does the person control the account -- does the submitted address tie to a
+  real, current residence? Evaluated FAIL -> VERIFIED -> REVIEW, same semantics as identity.yaml.
+evaluation_order: [fail, verified, review]
+default_outcome: review
+default_rule_id: OWNER_NO_RULE_MATCHED
+
+rules:
+  fail:
+    - id: OWNER_FAIL_NO_NAME_MATCH
+      description: Name does not match on file at all.
+      condition: { field: owner.name_match, op: eq, value: false }
+
+    - id: OWNER_FAIL_ADDRESS_NOT_FOUND
+      description: Submitted address is not on file anywhere and Ekata found no name match to it either.
+      condition:
+        all:
+          - { field: owner.address_match_status, op: eq, value: not_found }
+          - { field: owner.ekata_address_match_to_name, op: eq, value: "No match" }
+
+    - id: OWNER_FAIL_COMMERCIAL_MAIL_DROP
+      description: Address is a commercial mail drop / commercial address with no corroborating current-address match.
+      condition:
+        all:
+          - any:
+              - { field: owner.address_type, op: eq, value: "Commercial mail drop" }
+              - { field: owner.is_commercial_address, op: eq, value: true }
+          - { field: owner.address_match, op: eq, value: false }
+
+  verified:
+    - id: OWNER_VERIFIED
+      description: Name and current-address match corroborated by both vendors, non-commercial address.
+      condition:
+        all:
+          - { field: owner.name_match, op: eq, value: true }
+          - { field: owner.address_match, op: eq, value: true }
+          - { field: owner.ekata_address_name_match, op: eq, value: true }
+          - { field: owner.is_commercial_address, op: eq, value: false }
+          - { field: owner.consumer_alert, op: eq, value: false }
+
+  review:
+    - id: OWNER_REVIEW_STALE_ADDRESS
+      description: Name matches but the submitted address is only a Previous/SecondPrevious record (not current).
+      condition:
+        all:
+          - { field: owner.name_match, op: eq, value: true }
+          - { field: owner.address_match_status, op: in, value: [previous, second_previous] }

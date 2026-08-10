@@ -1,0 +1,83 @@
+{
+  "mcp_server": "vendor-gateway",
+  "description": "MCP server exposing one tool per verification vendor. This server performs NO scoring or normalization -- it is a thin, auditable transport layer. Auth/secrets live only here, never in the orchestrator.",
+  "definitions": {
+    "address": {
+      "type": "object",
+      "properties": {
+        "address_line1": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "zip_code": { "type": "string" },
+        "country": { "type": "string", "default": "US" }
+      },
+      "required": ["address_line1", "city", "state", "zip_code"]
+    }
+  },
+  "tools": [
+    {
+      "name": "giact_verify",
+      "description": "Calls LSEG GIACT PostInquiry (POST /api/v5/inquiries) for account/identity/OFAC verification. Minimum input: (routing_number + account_number) OR (first_name + last_name + (ssn OR dob)).",
+      "min_input_rules": [
+        { "all": ["routing_number", "account_number"] },
+        { "all": ["first_name", "last_name"], "any": ["ssn", "dob"] }
+      ],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "first_name": { "type": "string" },
+          "last_name": { "type": "string" },
+          "ssn": { "type": "string" },
+          "dob": { "type": "string", "format": "date" },
+          "routing_number": { "type": "string" },
+          "account_number": { "type": "string" },
+          "account_type": { "type": "string", "enum": ["Checking", "Savings"] },
+          "address": { "$ref": "#/definitions/address" }
+        }
+      },
+      "output_ref": "raw GIACT PostInquiryResult payload (unmodified)",
+      "errors": ["vendor_unavailable", "insufficient_input", "rate_limited", "auth_error"]
+    },
+    {
+      "name": "ekata_identity_check",
+      "description": "Calls Ekata identity_check (GET /3.3/identity_check) for name/phone/address/email/IP cross-validation and risk scores. Minimum input: name + at least one of (phone, email, address).",
+      "min_input_rules": [
+        { "all": ["name"], "any": ["phone", "email", "address"] }
+      ],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "phone": { "type": "string" },
+          "email": { "type": "string" },
+          "address": { "$ref": "#/definitions/address" },
+          "ip_address": { "type": "string" }
+        }
+      },
+      "output_ref": "raw Ekata identity_check response payload (unmodified)",
+      "errors": ["vendor_unavailable", "insufficient_input", "rate_limited", "auth_error"]
+    },
+    {
+      "name": "ews_check",
+      "description": "Calls Early Warning Services for account-abuse / fraud-history signals. Minimum input: (routing_number + account_number) OR ssn.",
+      "min_input_rules": [
+        { "all": ["routing_number", "account_number"] },
+        { "all": ["ssn"] }
+      ],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "ssn": { "type": "string" },
+          "routing_number": { "type": "string" },
+          "account_number": { "type": "string" }
+        }
+      },
+      "output_ref": "raw EWS response payload (unmodified)",
+      "errors": ["vendor_unavailable", "insufficient_input", "rate_limited", "auth_error"]
+    }
+  ],
+  "notes": [
+    "min_input_rules is evaluated deterministically by the orchestrator wrapper (engine/orchestrator_stub.py: has_min_fields) -- it is NOT left to LLM judgment.",
+    "Adding a 4th vendor means adding one tool definition here plus one mapping block in engine/canonical_mapper.py. No changes to rules/ or the orchestrator loop are required."
+  ]
+}

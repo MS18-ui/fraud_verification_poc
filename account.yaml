@@ -1,0 +1,38 @@
+domain: account
+description: >
+  Is the bank account itself real, open, and in good standing?
+  Evaluated FAIL -> VERIFIED -> REVIEW, same semantics as identity.yaml.
+evaluation_order: [fail, verified, review]
+default_outcome: review
+default_rule_id: ACCOUNT_NO_RULE_MATCHED
+
+rules:
+  fail:
+    - id: ACCOUNT_FAIL_VERIFICATION_RESPONSE
+      description: GIACT verification response is disqualifying (real GIACT values -- RiskAlert or NegativeData).
+      condition: { field: account.verification_response, op: in, value: [RiskAlert, NegativeData] }
+
+    - id: ACCOUNT_FAIL_CLOSED
+      description: Account has a closed date on file.
+      condition: { field: account.account_closed_date, op: exists, value: true }
+
+    - id: ACCOUNT_FAIL_EWS_HISTORY
+      description: EWS reports fraud/abuse history on this account.
+      condition: { field: account.ews_fraud_history, op: eq, value: true }
+
+  verified:
+    - id: ACCOUNT_VERIFIED
+      description: Clean verification, open account, explicitly verified (GIACT VerificationResponse == Pass).
+      condition:
+        all:
+          - { field: account.verification_response, op: eq, value: Pass }
+          - { field: account.account_verified, op: eq, value: true }
+          - { field: account.account_closed_date, op: exists, value: false }
+
+  review:
+    - id: ACCOUNT_REVIEW_ACCEPT_WITH_RISK
+      description: Accepted with a risk code but still open (real GIACT value -- AcceptWithRisk).
+      condition:
+        all:
+          - { field: account.verification_response, op: eq, value: AcceptWithRisk }
+          - { field: account.account_closed_date, op: exists, value: false }

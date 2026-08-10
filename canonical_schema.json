@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://internal/schemas/canonical_verification.json",
+  "title": "Canonical Verification Model",
+  "description": "Vendor-agnostic normalized model produced by the Canonical Normalization Layer. All rules (identity/owner/account/supplementary) and the ML fraud model read ONLY from this schema -- never from raw vendor payloads.",
+  "type": "object",
+  "required": ["schema_version", "unique_id", "identity", "owner", "account", "supplementary", "_provenance"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "unique_id": { "type": "string" },
+
+    "identity": {
+      "type": "object",
+      "description": "Fields used by rules/identity.yaml",
+      "required": [
+        "record_found", "name_match", "ofac_hit", "ssn_status",
+        "identity_check_score", "identity_network_score", "low_identity_score",
+        "phone_name_match", "email_name_match", "address_name_match",
+        "name_match_any", "alerts", "alerts_count"
+      ],
+      "properties": {
+        "record_found": { "type": "boolean" },
+        "name_match": { "type": "boolean", "description": "GIACT flag_name_match" },
+        "ofac_hit": { "type": "boolean" },
+        "ssn_status": { "type": ["string", "null"], "enum": ["clear", "invalid", "deceased", "not_issued", "caution", null] },
+        "identity_check_score": { "type": ["number", "null"], "minimum": 0, "maximum": 500 },
+        "identity_network_score": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "low_identity_score": { "type": "boolean" },
+        "phone_name_match": { "type": "boolean" },
+        "email_name_match": { "type": "boolean" },
+        "address_name_match": { "type": "boolean" },
+        "name_match_any": { "type": "boolean", "description": "Derived: name_match OR (phone_name_match AND email_name_match)" },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": { "type": "string", "enum": ["giact", "ekata", "ews"] },
+              "code": { "type": ["string", "null"] },
+              "type": { "type": ["string", "null"] },
+              "message": { "type": "string" }
+            }
+          }
+        },
+        "alerts_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "owner": {
+      "type": "object",
+      "description": "Fields used by rules/owner.yaml",
+      "required": [
+        "name_match", "address_match", "address_match_status", "consumer_alert",
+        "ekata_address_name_match", "ekata_address_match_to_name",
+        "is_commercial_address", "is_forwarder_address", "address_type"
+      ],
+      "properties": {
+        "name_match": { "type": "boolean" },
+        "address_match": { "type": "boolean", "description": "GIACT flag_address_match (true only if matched to a Current record)" },
+        "address_match_status": { "type": "string", "enum": ["current", "previous", "second_previous", "not_found"] },
+        "consumer_alert": { "type": "boolean" },
+        "ekata_address_name_match": { "type": "boolean" },
+        "ekata_address_match_to_name": { "type": "string", "enum": ["Match", "No match", "Partial", "Unknown"] },
+        "is_commercial_address": { "type": "boolean" },
+        "is_forwarder_address": { "type": "boolean" },
+        "address_type": { "type": ["string", "null"] },
+        "recent_previous_address_count_90d": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "account": {
+      "type": "object",
+      "description": "Fields used by rules/account.yaml",
+      "required": [
+        "verification_response", "account_verified", "response_code",
+        "account_closed_date", "funds_confirmation_result"
+      ],
+      "properties": {
+        "verification_response": { "type": "string", "enum": ["Verified", "AcceptWithRisk", "Invalid", "Unable to Locate", "Closed", "Unknown"] },
+        "account_verified": { "type": "boolean" },
+        "response_code": { "type": ["string", "null"] },
+        "account_closed_date": { "type": ["string", "null"], "format": "date-time" },
+        "funds_confirmation_result": { "type": ["string", "null"] },
+        "account_added_date": { "type": ["string", "null"], "format": "date-time" },
+        "account_last_updated_date": { "type": ["string", "null"], "format": "date-time" },
+        "ews_fraud_history": { "type": ["boolean", "null"] }
+      }
+    },
+
+    "supplementary": {
+      "type": "object",
+      "description": "Fields used by rules/supplementary.yaml (Additional Rules A-I)",
+      "properties": {
+        "ssn_issue_state": { "type": ["string", "null"] },
+        "ssn_issue_start_year": { "type": ["integer", "null"] },
+        "date_of_birth": { "type": ["string", "null"], "format": "date" },
+        "known_address_states": { "type": "array", "items": { "type": "string" } },
+
+        "prepaid_phone": { "type": "boolean" },
+        "phone_match_to_address": { "type": ["string", "null"] },
+        "phone_line_type": { "type": ["string", "null"] },
+        "submitted_phone_classification": { "type": ["string", "null"], "enum": ["Business", "Personal", null] },
+        "account_holder_type": { "type": "string", "enum": ["person", "business"] },
+
+        "email_is_disposable": { "type": "boolean" },
+        "email_is_autogenerated": { "type": "boolean" },
+        "email_first_seen_days": { "type": ["integer", "null"] },
+        "mailbox_velocity": { "type": ["integer", "null"] },
+        "email_risk_score": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+
+        "ip_proxy_risk": { "type": "boolean" },
+        "ip_error": { "type": ["string", "null"] },
+        "ip_warnings": { "type": "array", "items": { "type": "string" } },
+        "distance_from_primary_address_miles": { "type": ["number", "null"] },
+        "distance_from_primary_phone_miles": { "type": ["number", "null"] },
+        "travel_alert_on_file": { "type": "boolean" },
+
+        "ofac_potential_matches_count": { "type": "integer", "minimum": 0 },
+        "adverse_alert_codes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "_provenance": {
+      "type": "object",
+      "description": "Maps every canonical field path to the vendor(s) it was derived from, for LLM explainability reason codes.",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

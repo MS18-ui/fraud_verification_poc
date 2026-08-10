@@ -157,6 +157,14 @@ def run_pipeline_waterfall_demo(request: dict, account_holder_type: str = "perso
 
     emit("Canonical Normalization", "Unifying vendor response...", "running")
     vendor_results = waterfall["vendor_results"]
+
+    # Vendor-side audit trail (2026-08-08 call): compare against whatever
+    # was previously stored for this identity, BEFORE this run gets saved
+    # -- see data/case_store.py:check_and_log_vendor_changes(). Best-effort;
+    # never blocks the run if the DB is unavailable.
+    from data.case_store import check_and_log_vendor_changes
+    vendor_data_changes = check_and_log_vendor_changes(request.get("unique_id", "N/A"), vendor_results)
+
     giact_raw = vendor_results.get("giact_verify")
     ekata_raw = vendor_results.get("ekata_identity_check")
     ews_raw = vendor_results.get("ews_check")
@@ -299,6 +307,7 @@ def run_pipeline_waterfall_demo(request: dict, account_holder_type: str = "perso
         "waterfall_trail": waterfall["waterfall_trail"],
         "terminal_tool": waterfall["terminal_tool"],
         "bridged_from": bridged_from,
+        "vendor_data_changes": vendor_data_changes,
         "canonical": canonical,
         "vendor_decision": {
             "decision": decision,
