@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+verification_cases.db
+.env

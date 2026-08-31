@@ -1,0 +1,27 @@
+domain: reasonability
+description: >
+  Governance layer: does the VENDOR-RETURNED data itself pass basic
+  sanity checks, independent of whether the vendor's own match/
+  verification verdict says "pass"? Per the 2026-08-08/09 working calls:
+  vendor databases commonly contain implausible values (a future date,
+  an SSN issue year that predates the SSN program) despite the vendor's
+  own verdict being clean. This domain NEVER corrects the data and NEVER
+  forces a decline on its own (see rules/decision_table.yaml -- this
+  domain is deliberately not one of the three it reads) -- it only flags
+  what it finds, exactly as discussed: "we are not proposing the fix we
+  are flagging it." Still averaged into the deterministic rules score
+  like every other domain, so a flagged record visibly moves the
+  composite score even though it can't singlehandedly force HARD_DECLINE.
+evaluation_order: [review, verified]
+default_outcome: verified
+default_rule_id: REASONABILITY_CLEAN
+
+rules:
+  review:
+    - id: REASONABILITY_SSN_ISSUANCE_YEAR_IMPLAUSIBLE
+      description: GIACT-returned SSN issue year is implausible (before 1936 or in the future).
+      condition: { type: computed, function: ssn_issuance_year_implausible }
+
+    - id: REASONABILITY_VENDOR_DATE_IN_FUTURE
+      description: A GIACT-returned account date (added, last updated, or closed) is in the future.
+      condition: { type: computed, function: vendor_returned_date_implausible }
